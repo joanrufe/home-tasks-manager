@@ -47,6 +47,7 @@ class NotionService {
     } = {
       Diario: 1,
       Cada5Dias: 5,
+      "Bi-Semanal": 14,
       Semanal: 7,
       Mensual: 30,
     };
