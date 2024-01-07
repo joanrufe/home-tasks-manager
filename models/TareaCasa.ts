@@ -2,7 +2,7 @@ export interface TareaCasa {
   Asignado: {
     id: string;
     type: string;
-    select: {
+    select?: {
       id: string;
       name?: string;
     };
@@ -10,17 +10,17 @@ export interface TareaCasa {
   Recurrencia: {
     id: string;
     type: string;
-    select: { id: string; name?: string };
+    select?: { id: string; name?: string };
   };
   Date: {
     id: string;
     type: string;
-    date: { start?: string; end?: string; time_zone?: string };
+    date?: { start?: string; end?: string; time_zone?: string };
   };
   Estado: {
     id: string;
     type: string;
-    status: {
+    status?: {
       id: string;
       name?: string;
     };

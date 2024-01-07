@@ -31,10 +31,10 @@ class NotionService {
     const data = await this.queryDatabase(databaseId);
     const today = new Date();
     const mappedData = data.map((i) => ({
-      startDate: i.Date.date.start,
+      startDate: i.Date.date?.start,
       title: i.Name.title[0].plain_text,
-      recurrence: i.Recurrencia.select.name,
-      assignedTo: i.Asignado.select.name,
+      recurrence: i.Recurrencia.select?.name,
+      assignedTo: i.Asignado.select?.name,
     }));
 
     const withStartDate = mappedData.filter((i) => i.startDate);
