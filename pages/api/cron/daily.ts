@@ -14,7 +14,7 @@ export default async function handler() {
       return new Response("No database id", { status: 400 });
     const data = await notion.getTodaysTasks(process.env.NOTION_DB_ID);
     const messages = data
-      .map((i) => `${i.title} -> ${i.assignedTo}`)
+      .map((i, idx) => `${idx + 1}. ${i.title} -> ${i.assignedTo}`)
       .join("\n");
     const response = await telegram.sendMessage(encodeURIComponent(messages));
     console.log(response);
