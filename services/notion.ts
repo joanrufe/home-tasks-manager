@@ -34,7 +34,7 @@ class NotionService {
       startDate: i.Date.date?.start,
       title: i.Name.title[0].plain_text,
       recurrence: i.Recurrencia.select?.name,
-      assignedTo: i.Asignado.select?.name,
+      assignedTo: i.Asignado.select?.name || "Sin asignar",
     }));
 
     const withStartDate = mappedData.filter((i) => i.startDate);
@@ -46,6 +46,7 @@ class NotionService {
       [key: string]: number;
     } = {
       Diario: 1,
+      Cada2Dias: 2,
       Cada5Dias: 5,
       "Bi-Semanal": 14,
       Semanal: 7,
@@ -59,12 +60,15 @@ class NotionService {
         return true;
       }
       if (recurrence === "Semanal") {
-        return;
+        return daysSinceStart % daysRecurrence === 0;
       }
       if (recurrence === "Mensual") {
         return daysSinceStart % daysRecurrence === 0;
       }
       if (recurrence === "Cada5Dias") {
+        return daysSinceStart % daysRecurrence === 0;
+      }
+      if (recurrence === "Cada2Dias") {
         return daysSinceStart % daysRecurrence === 0;
       }
     };
