@@ -2,6 +2,7 @@
 import { Client } from "@notionhq/client";
 import { TareaCasa } from "models/TareaCasa";
 import dayjs from "dayjs";
+import { Workout } from "models/Workouts";
 
 class NotionService {
   private client: Client;
@@ -20,15 +21,32 @@ class NotionService {
     return response;
   }
 
-  async queryDatabase(databaseId: string) {
+  async queryDatabase<T extends object>(databaseId: string) {
     const response = await this.client.databases.query({
       database_id: databaseId,
     });
-    return response.results.map((e: any) => e.properties) as TareaCasa[];
+    return response.results.map((e: any) => e.properties) as T[];
   }
 
-  async getTodaysTasks(databaseId: string) {
-    const data = await this.queryDatabase(databaseId);
+  async getWorkouts() {
+    const response = await this.queryDatabase<Workout>(
+      process.env.NOTION_DB_WORKOUTS_ID as string
+    );
+    const mappedData = response.map((i) => ({
+      name: i.Nombre.title[0].plain_text,
+      tags: i.Etiquetas.multi_select.map((t) => t.name),
+      link: i.Link.rich_text[0].plain_text,
+      videos: i.Videos.files
+        .map((v) => v.name)
+        .map((url) => url.replace(/#.*$/, "")),
+    }));
+    return mappedData;
+  }
+
+  async getTodaysTasks() {
+    const data = await this.queryDatabase<TareaCasa>(
+      process.env.NOTION_DB_TASKS_ID as string
+    );
     const today = new Date();
     const mappedData = data.map((i) => ({
       startDate: i.Date.date?.start,

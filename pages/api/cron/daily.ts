@@ -10,9 +10,9 @@ export default async function handler() {
     const notion = new NotionService();
     const telegram = new TelegramService();
 
-    if (!process.env.NOTION_DB_ID)
+    if (!process.env.NOTION_DB_TASKS_ID)
       return new Response("No database id", { status: 400 });
-    const data = await notion.getTodaysTasks(process.env.NOTION_DB_ID);
+    const data = await notion.getTodaysTasks();
     const messages = data
       .map((i, idx) => `${idx + 1}. ${i.title} -> ${i.assignedTo}`)
       .join("\n");
