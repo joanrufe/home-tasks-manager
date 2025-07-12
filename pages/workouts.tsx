@@ -312,7 +312,7 @@ const WorkoutItem = ({
 }) => {
   return (
     <>
-      <div className="flex flex-wrap justify-between gap-4 mb-6">
+      <div className="flex flex-wrap justify-between gap-4 mb-6 relative">
         <video
           src={workout.videos[0]}
           autoPlay={true}
@@ -329,6 +329,19 @@ const WorkoutItem = ({
           className="max-w-full"
           style={{ width: layout === "horizontal" ? "50%" : "100%" }}
         />
+
+        {/* Small workout link button */}
+        {workout.link && (
+          <a
+            href={workout.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute top-2 right-2 bg-white/80 hover:bg-white text-blue-900 w-8 h-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center backdrop-blur-sm"
+            title="Ver workout completo"
+          >
+            <span className="text-sm">↗</span>
+          </a>
+        )}
       </div>
     </>
   );
