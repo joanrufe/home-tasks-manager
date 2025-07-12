@@ -1,15 +1,18 @@
 import { InferGetServerSidePropsType } from "next/types";
 import { NotionService } from "services/notion";
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 
 export default function Workouts({
   items,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filterMode, setFilterMode] = useState<"OR" | "AND">("OR");
+  const [isInitialized, setIsInitialized] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +43,60 @@ export default function Workouts({
         !selectedTags.includes(tag)
     );
   }, [searchQuery, uniqueTags, selectedTags]);
+
+  // Load initial state from URL parameters
+  useEffect(() => {
+    if (router.isReady && !isInitialized) {
+      const { tags, mode } = router.query;
+
+      if (tags) {
+        const tagsArray = Array.isArray(tags) ? tags : [tags];
+        const validTags = tagsArray.flatMap((tag) =>
+          typeof tag === "string"
+            ? tag.split(",").filter((t) => uniqueTags.includes(t.trim()))
+            : []
+        );
+        setSelectedTags(validTags);
+      }
+
+      if (mode && (mode === "OR" || mode === "AND")) {
+        setFilterMode(mode as "OR" | "AND");
+      }
+
+      setIsInitialized(true);
+    }
+  }, [router.isReady, router.query, uniqueTags, isInitialized]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const query: any = {};
+
+    if (selectedTags.length > 0) {
+      query.tags = selectedTags.join(",");
+    }
+
+    if (filterMode !== "OR") {
+      query.mode = filterMode;
+    }
+
+    // Only update URL if there are changes
+    const currentQuery = router.query;
+    const hasChanges =
+      query.tags !== currentQuery.tags || query.mode !== currentQuery.mode;
+
+    if (hasChanges) {
+      router.push(
+        {
+          pathname: router.pathname,
+          query: query,
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [selectedTags, filterMode, isInitialized, router]);
 
   useEffect(() => {
     setSelectedIndex(0);
@@ -86,6 +143,11 @@ export default function Workouts({
 
   const handleFilterModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterMode(e.target.checked ? "AND" : "OR");
+  };
+
+  const handleShareUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    // You could add a toast notification here
   };
 
   return (
@@ -189,6 +251,12 @@ export default function Workouts({
                 className="bg-gray-600 text-white px-3 py-1 rounded-full text-sm hover:bg-gray-500"
               >
                 Limpiar todo
+              </button>
+              <button
+                onClick={handleShareUrl}
+                className="bg-green-600 text-white px-3 py-1 rounded-full text-sm hover:bg-green-500"
+              >
+                📋 Compartir
               </button>
             </div>
           )}
