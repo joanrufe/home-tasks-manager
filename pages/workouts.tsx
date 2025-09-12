@@ -568,7 +568,7 @@ export default function Workouts({
             onClick={exitSessionMode}
             className="bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2"
           >
-            ← Volver a ejercicios
+            ← Volver
           </button>
           <h1 className="text-xl text-white font-bold">Modo Sesión</h1>
           <div className="flex gap-2">
@@ -944,7 +944,7 @@ const SessionView = ({
           {currentExercise && (
             <>
               {/* Large videos at the top */}
-              <div className="mb-4 -mx-4">
+              <div className="mb-4 -mx-1">
                 {currentExercise.videos.slice(0, 2).map((video, idx) => (
                   <video
                     key={idx}
@@ -952,8 +952,7 @@ const SessionView = ({
                     autoPlay
                     muted
                     loop
-                    className="w-full rounded-none object-contain mb-2 last:mb-0 px-1"
-                    style={{ height: "40vh", width: "100vw" }}
+                    // style={{ height: "40vh", width: "100vw" }}
                   />
                 ))}
               </div>
