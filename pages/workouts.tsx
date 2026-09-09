@@ -137,7 +137,7 @@ export default function Workouts({
   useEffect(() => {
     if (!isInitialized) return;
 
-    const query: any = {};
+    const query: Record<string, string> = {};
 
     if (selectedTags.length > 0) {
       query.tags = selectedTags.join(",");
@@ -272,7 +272,7 @@ export default function Workouts({
   };
 
   // Helper function to check if exercise is already in session
-  const isExerciseInSession = (workout: any): boolean => {
+  const isExerciseInSession = (workout: WorkoutItemData): boolean => {
     if (!sessionState.currentSession) return false;
     return sessionState.currentSession.exercises.some(
       (ex) =>
@@ -281,7 +281,7 @@ export default function Workouts({
     );
   };
 
-  const addExerciseToSession = (workout: any) => {
+  const addExerciseToSession = (workout: WorkoutItemData) => {
     if (!sessionState.currentSession) {
       createNewSession();
     }

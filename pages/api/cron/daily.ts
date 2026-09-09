@@ -1,10 +1,6 @@
 // import { NotionService } from "services/notion";
 // import { TelegramService } from "services/telegram";
 
-export const config = {
-  runtime: "edge",
-};
-
 export default async function handler() {
   console.log("Daily cron job is disabled");
   // try {

@@ -30,8 +30,8 @@ export interface TareaCasa {
     type: "title";
     title: {
       type: string;
-      text: {};
-      annotations: {};
+      text: { content: string };
+      annotations: Record<string, unknown>;
       plain_text?: string;
       href?: string;
     }[];

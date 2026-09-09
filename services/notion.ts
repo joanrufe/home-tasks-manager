@@ -22,10 +22,24 @@ class NotionService {
   }
 
   async queryDatabase<T extends object>(databaseId: string) {
-    const response = await this.client.databases.query({
+    // Notion API (2025-09-03+): databases are queried through their data sources.
+    // Resolve the database's first data source, then query it.
+    const database = await this.client.databases.retrieve({
       database_id: databaseId,
     });
-    return response.results.map((e: any) => e.properties) as T[];
+
+    const dataSourceId =
+      "data_sources" in database ? database.data_sources[0]?.id : undefined;
+    if (!dataSourceId) {
+      throw new Error(`No data source found for database ${databaseId}`);
+    }
+
+    const response = await this.client.dataSources.query({
+      data_source_id: dataSourceId,
+    });
+    return response.results.map(
+      (e) => (e as unknown as { properties: T }).properties
+    );
   }
 
   async getWorkouts() {
