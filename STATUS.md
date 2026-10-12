@@ -1,6 +1,6 @@
 # STATUS — home-tasks-manager
 
-Actualizado: 2026-09-09
+Actualizado: 2026-10-12
 
 ## Qué es
 
