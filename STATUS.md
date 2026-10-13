@@ -24,8 +24,11 @@ y manda un digest diario por **Telegram** vía Vercel Cron (`0 8 * * *`).
 
 ## Estado actual
 
-**Dormido / deshabilitado.** El cron daily tiene toda la lógica comentada — solo loguea
-"Daily cron job is disabled" (`pages/api/cron/daily.ts:4`).
+**Parcialmente activo.** Cron deshabilitado: el digest diario por Telegram no corre
+(la lógica en `pages/api/cron/daily.ts:4` está comentada y solo loguea). Pero la
+**app sigue deployada y navegable en Vercel** (`home-tasks-manager.vercel.app`,
+verificado 2026-10-12): la parte de **workouts funciona** — `pages/workouts.tsx`
+lee y registra sesiones contra la DB de Notion sin depender del cron.
 
 ## Deuda técnica / notas
 
